@@ -3,6 +3,7 @@
  */
 package SainsburysTechTest;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -11,11 +12,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SainsburysTechTest {
-    @Test public void testGetGroceryProductsAsHTML() throws IOException {
-    	GroceryService service = new GroceryService();
+	
+	private GroceryService service;
+	
+	@Before
+	public void setUp() throws MalformedURLException{
+		service = new GroceryService("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html");	
+	}
+	
+    @Test
+    public void testGetGroceryProductsAsHTML() throws IOException {
     	
-    	String response = service.getGrocerciesAsHTML(new URL("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html"));
+    	
+    	String response = service.getGrocerciesAsHTML();
     	System.out.println(response);
         assertNotEquals(response, "");
     }
+   
 }
