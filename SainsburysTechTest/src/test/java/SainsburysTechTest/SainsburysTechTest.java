@@ -29,4 +29,10 @@ public class SainsburysTechTest {
         assertNotEquals(response, "");
     }
    
+    @Test
+    public void testGetGrocerySummaryAsJSON() throws IOException {
+    	String response = service.getGroceriesSummaryAsJSON();
+    	
+    	assertNotEquals(response, "");   	
+    }
 }
