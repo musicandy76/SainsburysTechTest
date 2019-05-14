@@ -3,17 +3,17 @@
  */
 package SainsburysTechTest;
 
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import GroceryStore.GroceryItem;
 import GroceryStore.GroceryList;
-
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class SainsburysTechTest {
 
@@ -37,7 +37,7 @@ public class SainsburysTechTest {
 	@Test 
     public void testExampleJSONParsesasPOJO() {
 		
-	
+		// TODO : Refactor to use a Grocery Item builder patter
 		
 		GroceryList groceryList = new GroceryList();
 		
