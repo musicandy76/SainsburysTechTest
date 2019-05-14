@@ -1,9 +1,13 @@
 package GroceryStore;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 public class GroceryItem {
 	private String title;
 	private Integer kcal_per_100g;
-	private double unit_price;
+	private BigDecimal unit_price = new BigDecimal(0);
 	private String description;
 	
 	public String getTitle() {
@@ -18,12 +22,17 @@ public class GroceryItem {
 	public void setKcal_per_100g(Integer kcal_per_100g) {
 		this.kcal_per_100g = kcal_per_100g;
 	}
-	public double getUnit_price() {
+	public BigDecimal getUnit_price() {
 		return unit_price;
 	}
-	public void setUnit_price(double unit_price) {
-		this.unit_price = unit_price;
+	
+	public void setUnit_price(double unit_priceValue) {
+		
+		BigDecimal bd = new BigDecimal(unit_priceValue);
+		bd = bd.setScale(2, RoundingMode.HALF_UP);
+		this.unit_price= bd;
 	}
+	
 	public String getDescription() {
 		return description;
 	}

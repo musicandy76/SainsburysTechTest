@@ -67,7 +67,7 @@ public class SainsburysTechTest {
 		groceryList.setGrossVat(0.83);
 		
 		
-    	String compareString = "{\"results\":[{\"title\":\"Sainsbury's Strawberries 400g\",\"kcal_per_100g\":33,\"unit_price\":1.75,\"description\":\"by Sainsbury's strawberries\"},{\"title\":\"Sainsbury's Blueberries 200g\",\"kcal_per_100g\":45,\"unit_price\":1.75,\"description\":\"by Sainsbury's blueberries\"},{\"title\":\"Sainsbury's Cherry Punnet 200g\",\"kcal_per_100g\":52,\"unit_price\":1.5,\"description\":\"Cherries\"}],\"total\":{\"gross\":5.0,\"vat\":0.83}}";
+    	String compareString = "{\"results\":[{\"title\":\"Sainsbury's Strawberries 400g\",\"kcal_per_100g\":33,\"unit_price\":1.75,\"description\":\"by Sainsbury's strawberries\"},{\"title\":\"Sainsbury's Blueberries 200g\",\"kcal_per_100g\":45,\"unit_price\":1.75,\"description\":\"by Sainsbury's blueberries\"},{\"title\":\"Sainsbury's Cherry Punnet 200g\",\"kcal_per_100g\":52,\"unit_price\":1.50,\"description\":\"Cherries\"}],\"total\":{\"gross\":5.00,\"vat\":0.83}}";
     			
     	
     	String result = service.convertGroceryListToJSON(groceryList);

@@ -1,5 +1,7 @@
 package GroceryStore;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +16,17 @@ public class GroceryList {
 	}
 
 	public void setGrossTotal(double gross) {
-		total.setGross(gross);
+		total.setGross(roundCurrency(gross));
 	}
 
 	public void setGrossVat(double vat) {
-		total.setVat(vat);
+		total.setVat(roundCurrency(vat));
+	}
+	
+	double roundCurrency(double value) {
+		BigDecimal bd = new BigDecimal(Double.toString(value));
+	    bd = bd.setScale(2, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 
 
