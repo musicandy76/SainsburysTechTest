@@ -5,6 +5,9 @@ package SainsburysTechTest;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import GroceryStore.GroceryList;
+
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -29,15 +32,11 @@ public class SainsburysTechTest {
 		assertNotEquals(response, "");
 	}
 
-	@Test
-	public void testGetGrocerySummaryAsJSON() throws IOException {
-		String response = service.getGroceriesSummaryAsJSON();
-
-		assertNotEquals(response, "");
-	}
 
 	@Test 
     public void testExampleJSONParsesasPOJO() {
+		
+		GroceryList groceryList = new GroceryList();
     	String compareString = "{\n" + 
     			"  \"results\": [\n" + 
     			"    {\n" + 
@@ -67,7 +66,7 @@ public class SainsburysTechTest {
     			"}";
     			
     	
-    	assertTrue(service.convertGroceryListToJSON().equals(compareString));
+    	assertTrue(service.convertGroceryListToJSON(groceryList).equals(compareString));
 	}
     			
 }
