@@ -28,9 +28,12 @@ public class SainsburysTechTest {
 	@Test
 	public void testGetGroceryProductsAsHTML() throws IOException {
 
-		String response = service.getGrocerciesAsHTML();
-		System.out.println(response);
-		assertNotEquals(response, "");
+		GroceryList response = service.scrapeGrociesListfromHTML();
+		
+		String json = service.convertGroceryListToJSON(response);
+		System.out.println(json);
+		
+		assertNotEquals(json, null);
 	}
 
 
