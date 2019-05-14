@@ -110,9 +110,14 @@ public class GroceryService {
     			"    \"vat\": 0.83\n" + 
     			"  }\n" + 
     			"}";
-    			
+
 		
-		return groceryListTemp;
+		 final GsonBuilder builder = new GsonBuilder();
+		    builder.disableHtmlEscaping();
+		    
+		final Gson gson = builder.create();
+		
+		return gson.toJson(groceryList, GroceryList.class);
 		
 	}
 }
