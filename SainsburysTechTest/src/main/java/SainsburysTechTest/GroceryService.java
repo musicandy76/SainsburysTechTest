@@ -71,4 +71,40 @@ public class GroceryService {
 			
 	
 	}
+
+	public String convertGroceryListToJSON() {
+		// TODO Auto-generated method stub
+		
+		String groceryList = "{\n" + 
+    			"  \"results\": [\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Strawberries 400g\",\n" + 
+    			"      \"kcal_per_100g\": 33,\n" + 
+    			"      \"unit_price\": 1.75,\n" + 
+    			"      \"description\": \"by Sainsbury's strawberries\"\n" + 
+    			"    },\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Blueberries 200g\",\n" + 
+    			"      \"kcal_per_100g\": 45,\n" + 
+    			"      \"unit_price\": 1.75,\n" + 
+    			"      \"description\": \"by Sainsbury's blueberries\"\n" + 
+    			"    },\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Cherry Punnet 200g\",\n" + 
+    			"      \"kcal_per_100g\": 52,\n" + 
+    			"      \"unit_price\": 1.5,\n" + 
+    			"      \"description\": \"Cherries\"\n" + 
+    			"    }\n" + 
+    			"\n" + 
+    			"  ],\n" + 
+    			"  \"total\": {\n" + 
+    			"    \"gross\": 5.00,\n" + 
+    			"    \"vat\": 0.83\n" + 
+    			"  }\n" + 
+    			"}";
+    			
+		
+		return groceryList;
+		
+	}
 }

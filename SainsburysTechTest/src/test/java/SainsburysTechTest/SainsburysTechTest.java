@@ -12,27 +12,62 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SainsburysTechTest {
-	
+
 	private GroceryService service;
-	
+
 	@Before
-	public void setUp() throws MalformedURLException{
-		service = new GroceryService("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html");	
+	public void setUp() throws MalformedURLException {
+		service = new GroceryService(
+				"https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html");
 	}
-	
-    @Test
-    public void testGetGroceryProductsAsHTML() throws IOException {
+
+	@Test
+	public void testGetGroceryProductsAsHTML() throws IOException {
+
+		String response = service.getGrocerciesAsHTML();
+		System.out.println(response);
+		assertNotEquals(response, "");
+	}
+
+	@Test
+	public void testGetGrocerySummaryAsJSON() throws IOException {
+		String response = service.getGroceriesSummaryAsJSON();
+
+		assertNotEquals(response, "");
+	}
+
+	@Test 
+    public void testExampleJSONParsesasPOJO() {
+    	String compareString = "{\n" + 
+    			"  \"results\": [\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Strawberries 400g\",\n" + 
+    			"      \"kcal_per_100g\": 33,\n" + 
+    			"      \"unit_price\": 1.75,\n" + 
+    			"      \"description\": \"by Sainsbury's strawberries\"\n" + 
+    			"    },\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Blueberries 200g\",\n" + 
+    			"      \"kcal_per_100g\": 45,\n" + 
+    			"      \"unit_price\": 1.75,\n" + 
+    			"      \"description\": \"by Sainsbury's blueberries\"\n" + 
+    			"    },\n" + 
+    			"    {\n" + 
+    			"      \"title\": \"Sainsbury's Cherry Punnet 200g\",\n" + 
+    			"      \"kcal_per_100g\": 52,\n" + 
+    			"      \"unit_price\": 1.5,\n" + 
+    			"      \"description\": \"Cherries\"\n" + 
+    			"    }\n" + 
+    			"\n" + 
+    			"  ],\n" + 
+    			"  \"total\": {\n" + 
+    			"    \"gross\": 5.00,\n" + 
+    			"    \"vat\": 0.83\n" + 
+    			"  }\n" + 
+    			"}";
+    			
     	
-    	
-    	String response = service.getGrocerciesAsHTML();
-    	System.out.println(response);
-        assertNotEquals(response, "");
-    }
-   
-    @Test
-    public void testGetGrocerySummaryAsJSON() throws IOException {
-    	String response = service.getGroceriesSummaryAsJSON();
-    	
-    	assertNotEquals(response, "");   	
-    }
+    	assertTrue(service.convertGroceryListToJSON().equals(compareString));
+	}
+    			
 }
