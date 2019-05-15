@@ -4,9 +4,14 @@
 package SainsburysTechTest;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 import org.junit.Before;
@@ -37,14 +42,35 @@ public class SainsburysTechTest {
 	}
 	
 	@Test 
-	public void testGetProductsSummary()
+	public void testGetProductsSummary() throws IOException
 	{
+		GroceryItem testItem = new GroceryItem();
 		
+		Document doc = Jsoup.parse(IOUtils.toString(
+			      this.getClass().getResourceAsStream("/ExampleProductSummary.html")
+			    ));
+		
+		service.getProductSummary(testItem, doc);
+	
+		assertNotNull(testItem.getTitle());
+		assertNotEquals(testItem.getUnit_price(), (BigDecimal.ZERO));
 	}
 	
 	@Test 
-	public void testGetProductsAdditionalInformation()
+	public void testGetProductsAdditionalInformation() throws IOException
 	{
+		
+		GroceryItem testItem = new GroceryItem();
+		
+		Document doc = Jsoup.parse(IOUtils.toString(
+			      this.getClass().getResourceAsStream("/ExampleProductAdditionalInformation.html")
+			    ));
+		
+		
+		service.getProductInformation(testItem, doc);
+	
+		assertNotNull(testItem.getDescription());
+		assertNotEquals(testItem.getKcal_per_100g(), new Integer(0));
 		
 	}
 

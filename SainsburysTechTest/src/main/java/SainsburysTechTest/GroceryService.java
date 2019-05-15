@@ -68,6 +68,8 @@ public class GroceryService {
 		  groceryList.addItem(getGroceryItemFromElementLink(element));
 	  }
 	  
+	  
+	  
 	  return groceryList;
 	}
 
@@ -76,7 +78,12 @@ public class GroceryService {
 		Element productLink = element.select("a").first();
 		
 		Document doc = Jsoup.parse(getProductSummaryFromHTML(productLink));
-		System.out.println(doc.toString());
+		
+		getProductSummary(groceryItem, doc);
+		getProductInformation(groceryItem, doc);
+		
+		
+		
 		   
 	    return groceryItem;
 	}
@@ -98,7 +105,40 @@ public class GroceryService {
 	    	htmlProductSummary=  buildAndExecuteRequest(urlRequest).body().string();
 	    }
 	    
+	    
 	    return htmlProductSummary;
+	}
+
+	public void getProductInformation(GroceryItem item, Document doc ) {
+		item.setDescription(getTextNodeText(doc.select(".productText").select("p")));
+
+		
+ 
+		if(doc.select(".nutritionLevel1") != null) {
+			
+			String result = getTextNodeText(doc.select(".nutritionLevel1")).replace("kcal", "");
+			if(result != null && !result.equals("")) {
+				item.setKcal_per_100g(Integer.parseInt(result));
+			}
+			
+		}
+	}
+	
+	private String  getTextNodeText(Elements elements)
+	{
+		for(Element element : elements) 
+		{		
+			if(element.childNode(0) instanceof TextNode) {
+				return ((TextNode)element.childNode(0)).text();
+			}
+		}
+		
+		return "";
+	}
+
+	public  void getProductSummary(GroceryItem item, Document doc) {
+		item.setTitle(getTextNodeText(doc.select(".productTitleDescriptionContainer").select("h1")));
+		item.setUnit_price(Double.parseDouble(getTextNodeText(doc.select(".pricePerUnit")).replace("£", "")));
 	}
 
 	public String convertGroceryListToJSON(GroceryList groceryList) {
