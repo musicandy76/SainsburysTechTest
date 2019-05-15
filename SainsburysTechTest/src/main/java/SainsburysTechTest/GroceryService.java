@@ -23,7 +23,11 @@ import okhttp3.Response;
 
 public class GroceryService {
 	
+	private static  final String BASE_URL = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb";
+	
 	private URL groceriesURL;
+	
+	private OkHttpClient client = new OkHttpClient();
 	
 	
 	public GroceryService() {
@@ -34,19 +38,20 @@ public class GroceryService {
 		groceriesURL= new URL(url);
 	}
 
-	public String getGrocerciesAsHTML() throws IOException {
-		
-		OkHttpClient client = new OkHttpClient();
-		
+	public String getGrocerciesAsHTML() throws IOException {	
+		return buildAndExecuteRequest(groceriesURL).body().string();
+	}
+	
+	public Response buildAndExecuteRequest(URL url) throws IOException
+	{
 		Request request = new Request.Builder()
-				.url(groceriesURL)
+				.url(url)
 				.get()
 				.build();
 		
+		return client.newCall(request).execute();
+		 
 		
-		try (Response response = client.newCall(request).execute()) {
-			return response.body().string();
-		}
 	}
 
 	public GroceryList scrapeGrociesListfromHTML() throws IOException {
@@ -54,25 +59,46 @@ public class GroceryService {
 	  GroceryList groceryList = new GroceryList();
 	  Document doc = Jsoup.parse(getGrocerciesAsHTML());
 	  
+	  Element link = doc.select("a").first();
+	  
 	  // Read all elements and add a root "results" to the JSON object
 	  Elements productList = doc.select(".gridView .gridItem");
 	  
-	  for (Element element : productList)
-	  { 
-		 GroceryItem groceryItem = new GroceryItem();
-		  
-		 Node elementNew =  element.select(".product .productInfo .productNameAndPromotions").first().childNode(1);
-		 Node productElement = elementNew.childNode(1);
-		 TextNode node = (TextNode) productElement.childNode(0);
-		 groceryItem.setTitle(node.text());
-		 
-		 
-		 groceryList.addItem(groceryItem);
-		 System.out.println(node.toString());
+	  for (Element element : productList) { 
+		  groceryList.addItem(getGroceryItemFromElementLink(element));
 	  }
-	
 	  
 	  return groceryList;
+	}
+
+	private GroceryItem getGroceryItemFromElementLink(Element element) throws IOException {
+		GroceryItem groceryItem = new GroceryItem();
+		Element productLink = element.select("a").first();
+		
+		Document doc = Jsoup.parse(getProductSummaryFromHTML(productLink));
+		System.out.println(doc.toString());
+		   
+	    return groceryItem;
+	}
+
+	private String getProductSummaryFromHTML(Element productLink) throws MalformedURLException, IOException {
+		String htmlProductSummary = "";
+		String url;
+		 
+		String linkString = productLink.attr("abs:href"); // ftr, neither this nor absUrl("href") works
+		if (linkString.isEmpty()) { // check if returned "" (i.e., the problem at hand)
+		 	url = (BASE_URL +productLink.attr("href")); // concatenate baseURI to relative ref
+		}
+	     else { // for all the properly returned absolute refs
+	    	url = productLink.attr("abs:href");
+	    }
+	    
+	    if(!url.isEmpty()) {
+	    	URL urlRequest = new URL(url);
+	    	htmlProductSummary=  buildAndExecuteRequest(urlRequest).body().string();
+	    }
+	    
+	    return htmlProductSummary;
 	}
 
 	public String convertGroceryListToJSON(GroceryList groceryList) {

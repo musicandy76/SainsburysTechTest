@@ -35,6 +35,20 @@ public class SainsburysTechTest {
 		
 		assertNotEquals(json, null);
 	}
+	
+	@Test 
+	public void testGetProductsSummary()
+	{
+		
+	}
+	
+	@Test 
+	public void testGetProductsAdditionalInformation()
+	{
+		
+	}
+
+
 
 
 	@Test 
