@@ -29,7 +29,6 @@ public class GroceryService {
 	
 	private OkHttpClient client = new OkHttpClient();
 	
-	
 	public GroceryService() {
 		
 	}
@@ -111,16 +110,12 @@ public class GroceryService {
 
 	public void getProductInformation(GroceryItem item, Document doc ) {
 		item.setDescription(getTextNodeText(doc.select(".productText").select("p")));
-
-		
- 
 		if(doc.select(".nutritionLevel1") != null) {
 			
 			String result = getTextNodeText(doc.select(".nutritionLevel1")).replace("kcal", "");
 			if(result != null && !result.equals("")) {
 				item.setKcal_per_100g(Integer.parseInt(result));
-			}
-			
+			}			
 		}
 	}
 	
