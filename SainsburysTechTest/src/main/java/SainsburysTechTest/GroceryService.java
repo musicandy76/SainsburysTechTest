@@ -7,11 +7,9 @@ import java.net.URL;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import GroceryStore.GroceryItem;

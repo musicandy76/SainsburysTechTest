@@ -20,7 +20,7 @@ import org.junit.Test;
 import GroceryStore.GroceryItem;
 import GroceryStore.GroceryList;
 
-public class SainsburysTechTest {
+public class SainsburysTechTestUnitTests {
 
 	private GroceryService service;
 
