@@ -63,10 +63,16 @@ public class GroceryService {
 	  // Read all elements and add a root "results" to the JSON object
 	  Elements productList = doc.select(".gridView .gridItem");
 	  
-	  for (Element element : productList) { 
-		  groceryList.addItem(getGroceryItemFromElementLink(element));
+	  for (Element element : productList) {
+		  
+		  GroceryItem item = getGroceryItemFromElementLink(element);
+		  
+		  groceryList.addToGrossTotal(item.getUnit_price());
+		  groceryList.addItem(item);
+		  
 	  }
 	  
+	  groceryList.calculateVAT();
 	  
 	  
 	  return groceryList;

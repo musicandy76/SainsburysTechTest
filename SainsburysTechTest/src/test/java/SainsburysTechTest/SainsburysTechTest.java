@@ -107,7 +107,9 @@ public class SainsburysTechTest {
 		groceryList.addItem(item2);
 		groceryList.addItem(item3);
 		groceryList.setGrossTotal(5.0);
-		groceryList.setGrossVat(0.83);
+		
+		groceryList.calculateVAT();
+//		groceryList.setV(gross);();
 		
 		
     	String compareString = "{\"results\":[{\"title\":\"Sainsbury's Strawberries 400g\",\"kcal_per_100g\":33,\"unit_price\":1.75,\"description\":\"by Sainsbury's strawberries\"},{\"title\":\"Sainsbury's Blueberries 200g\",\"kcal_per_100g\":45,\"unit_price\":1.75,\"description\":\"by Sainsbury's blueberries\"},{\"title\":\"Sainsbury's Cherry Punnet 200g\",\"kcal_per_100g\":52,\"unit_price\":1.50,\"description\":\"Cherries\"}],\"total\":{\"gross\":5.00,\"vat\":0.83}}";

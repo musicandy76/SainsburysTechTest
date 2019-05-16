@@ -23,10 +23,12 @@ public class GroceryTotal {
 	}
 	
 	
-	public void setVat(double vatValue) {		
-		BigDecimal bd = new BigDecimal(vatValue);
+	public void setVat(BigDecimal bd) {	
 		bd = bd.setScale(2, RoundingMode.HALF_UP);
 		this.vat = bd;
+	}
+	public void incrementTotal(BigDecimal unit_price) {
+		this.gross = this.gross.add(unit_price);
 	}
 
 }
