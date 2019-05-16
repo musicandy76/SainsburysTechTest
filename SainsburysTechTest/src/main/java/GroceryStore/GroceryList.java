@@ -14,6 +14,8 @@ public class GroceryList {
 
 	public void addItem(GroceryItem item1) {
 		results.add(item1);
+		total.addToGrossTotal(item1.getUnit_price());
+		total.calculateVAT();
 	}
 
 	public BigDecimal getGrossTotal() {
@@ -30,15 +32,7 @@ public class GroceryList {
 		return bd.doubleValue();
 	}
 
-	public void addToGrossTotal(BigDecimal unit_price) {
-		total.incrementTotal(unit_price);
-	}
-
-	public void calculateVAT() {
-		BigDecimal vat = total.getGross().divide(new BigDecimal(1.20),MathContext.DECIMAL128).subtract(total.getGross()).multiply(new BigDecimal(-1));
-		total.setVat(vat);
-		
-	}
+	
 
 
 }

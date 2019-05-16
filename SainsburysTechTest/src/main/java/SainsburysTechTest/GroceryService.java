@@ -56,75 +56,44 @@ public class GroceryService {
 	public GroceryList scrapeGrociesListfromHTML() throws IOException {
    			
 	  GroceryList groceryList = new GroceryList();
-	  Document doc = Jsoup.parse(getGrocerciesAsHTML());
 	  
-	  Element link = doc.select("a").first();
-	  
-	  // Read all elements and add a root "results" to the JSON object
-	  Elements productList = doc.select(".gridView .gridItem");
-	  
-	  for (Element element : productList) {
-		  
-		  GroceryItem item = getGroceryItemFromElementLink(element);
-		  
-		  groceryList.addToGrossTotal(item.getUnit_price());
-		  groceryList.addItem(item);
-		  
+	  try {
+		  Document doc = Jsoup.parse(getGrocerciesAsHTML());
+		  		  
+		  for (Element element : doc.select(".gridView .gridItem")) {
+			  groceryList.addItem(getGroceryItemFromElementLink(element));
+		  }
+  
 	  }
-	  
-	  groceryList.calculateVAT();
-	  
-	  
+	  catch (MalformedURLException e) 
+	  {
+		  throw e;
+	  }
+
 	  return groceryList;
 	}
 
-	private GroceryItem getGroceryItemFromElementLink(Element element) throws IOException {
-		GroceryItem groceryItem = new GroceryItem();
-		Element productLink = element.select("a").first();
+	private GroceryItem getGroceryItemFromElementLink(Element element) throws MalformedURLException, IOException {
 		
-		Document doc = Jsoup.parse(getProductSummaryFromHTML(productLink));
-		
-		getProductSummary(groceryItem, doc);
-		getProductInformation(groceryItem, doc);
-		
-		
-		
-		   
-	    return groceryItem;
+		try {
+			Document doc = Jsoup.parse(getProductSummaryFromHTML(element.select("a").first()));
+			return getProductSummary( doc);
+		}
+		catch (MalformedURLException e)
+		{
+			throw e;
+		}
 	}
 
 	private String getProductSummaryFromHTML(Element productLink) throws MalformedURLException, IOException {
-		String htmlProductSummary = "";
-		String url;
-		 
-		String linkString = productLink.attr("abs:href"); // ftr, neither this nor absUrl("href") works
-		if (linkString.isEmpty()) { // check if returned "" (i.e., the problem at hand)
-		 	url = (BASE_URL +productLink.attr("href")); // concatenate baseURI to relative ref
-		}
-	     else { // for all the properly returned absolute refs
-	    	url = productLink.attr("abs:href");
-	    }
+		
+    	return buildAndExecuteRequest(new URL(
+    			productLink.attr("abs:href").isEmpty() ?
+    					(BASE_URL +productLink.attr("href")) 
+    					: productLink.attr("abs:href"))).body().string();
 	    
-	    if(!url.isEmpty()) {
-	    	URL urlRequest = new URL(url);
-	    	htmlProductSummary=  buildAndExecuteRequest(urlRequest).body().string();
-	    }
-	    
-	    
-	    return htmlProductSummary;
 	}
 
-	public void getProductInformation(GroceryItem item, Document doc ) {
-		item.setDescription(getTextNodeText(doc.select(".productText").select("p")));
-		if(doc.select(".nutritionLevel1") != null) {
-			
-			String result = getTextNodeText(doc.select(".nutritionLevel1")).replace("kcal", "");
-			if(result != null && !result.equals("")) {
-				item.setKcal_per_100g(Integer.parseInt(result));
-			}			
-		}
-	}
-	
 	private String  getTextNodeText(Elements elements)
 	{
 		for(Element element : elements) 
@@ -137,17 +106,34 @@ public class GroceryService {
 		return "";
 	}
 
-	public  void getProductSummary(GroceryItem item, Document doc) {
-		item.setTitle(getTextNodeText(doc.select(".productTitleDescriptionContainer").select("h1")));
-		item.setUnit_price(Double.parseDouble(getTextNodeText(doc.select(".pricePerUnit")).replace("£", "")));
+	public GroceryItem  getProductSummary( Document doc) {
+		
+		GroceryItem groceryItem = new GroceryItem.GroceryItemBuilder()
+				.setTitle(getTextNodeText(doc.select(".productTitleDescriptionContainer").select("h1")))
+				.setUnitPrice(Double.parseDouble(getTextNodeText(doc.select(".pricePerUnit")).replace("£", "")))
+				.build();
+		
+		getProductInformation(groceryItem, doc);
+		return groceryItem; 
+	}
+	
+	public void getProductInformation(GroceryItem item, Document doc)
+	{
+		item.setDescription(getTextNodeText(doc.select(".productText").select("p")));
+		if(doc.select(".nutritionLevel1") != null) {
+			
+			String result = getTextNodeText(doc.select(".nutritionLevel1")).replace("kcal", "");
+			if(result != null && !result.equals("")) {
+				item.setKcal_per_100g(Integer.parseInt(result));
+			}			
+		}
 	}
 
 	public String convertGroceryListToJSON(GroceryList groceryList) {
 				
-		final GsonBuilder builder = new GsonBuilder();
+		final GsonBuilder builder = new GsonBuilder().disableHtmlEscaping();
 		    builder.disableHtmlEscaping();
-		    
-		final Gson gson = builder.create();	
-		return gson.toJson(groceryList, GroceryList.class);
+			
+		return new GsonBuilder().disableHtmlEscaping().create().toJson(groceryList, GroceryList.class);
 	}
 }

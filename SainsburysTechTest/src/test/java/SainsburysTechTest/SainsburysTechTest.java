@@ -43,14 +43,12 @@ public class SainsburysTechTest {
 	
 	@Test 
 	public void testGetProductsSummary() throws IOException
-	{
-		GroceryItem testItem = new GroceryItem();
-		
+	{	
 		Document doc = Jsoup.parse(IOUtils.toString(
 			      this.getClass().getResourceAsStream("/ExampleProductSummary.html")
 			    ));
 		
-		service.getProductSummary(testItem, doc);
+		GroceryItem  testItem = service.getProductSummary(doc);
 	
 		assertNotNull(testItem.getTitle());
 		assertNotEquals(testItem.getUnit_price(), (BigDecimal.ZERO));
@@ -60,7 +58,7 @@ public class SainsburysTechTest {
 	public void testGetProductsAdditionalInformation() throws IOException
 	{
 		
-		GroceryItem testItem = new GroceryItem();
+		GroceryItem testItem = new GroceryItem.GroceryItemBuilder().build();
 		
 		Document doc = Jsoup.parse(IOUtils.toString(
 			      this.getClass().getResourceAsStream("/ExampleProductAdditionalInformation.html")
@@ -74,9 +72,6 @@ public class SainsburysTechTest {
 		
 	}
 
-
-
-
 	@Test 
     public void testExampleJSONParsesasPOJO() {
 		
@@ -84,32 +79,31 @@ public class SainsburysTechTest {
 		
 		GroceryList groceryList = new GroceryList();
 		
-		GroceryItem item1 = new GroceryItem();
-		item1.setTitle("Sainsbury's Strawberries 400g");
-		item1.setKcal_per_100g(33);
-		item1.setUnit_price(1.75);
-		item1.setDescription("by Sainsbury's strawberries");
+		GroceryItem item1 = new GroceryItem.GroceryItemBuilder()
+			.setTitle("Sainsbury's Strawberries 400g")
+			.setKcal_per_100g(33)
+			.setUnitPrice(1.75)
+			.setDescription("by Sainsbury's strawberries")
+			.build();
 		
-		GroceryItem item2 = new GroceryItem();
-		item2.setTitle("Sainsbury's Blueberries 200g");
-		item2.setUnit_price(1.75);
-		item2.setKcal_per_100g(45);
-		item2.setDescription("by Sainsbury's blueberries");
-		
-		GroceryItem item3 = new GroceryItem();
-		item3.setTitle("Sainsbury's Cherry Punnet 200g");
-		item3.setKcal_per_100g(52);
-		item3.setUnit_price(1.5);
-		item3.setDescription("Cherries");
+		GroceryItem item2 = new GroceryItem.GroceryItemBuilder()
+			.setTitle("Sainsbury's Blueberries 200g")
+			.setUnitPrice(1.75)
+			.setKcal_per_100g(45)
+			.setDescription("by Sainsbury's blueberries")
+			.build();
+			
+		GroceryItem item3 = new GroceryItem.GroceryItemBuilder()
+			.setTitle("Sainsbury's Cherry Punnet 200g")
+			.setKcal_per_100g(52)
+			.setUnitPrice(1.5)
+			.setDescription("Cherries")
+			.build();
 		
 		
 		groceryList.addItem(item1);
 		groceryList.addItem(item2);
 		groceryList.addItem(item3);
-		groceryList.setGrossTotal(5.0);
-		
-		groceryList.calculateVAT();
-//		groceryList.setV(gross);();
 		
 		
     	String compareString = "{\"results\":[{\"title\":\"Sainsbury's Strawberries 400g\",\"kcal_per_100g\":33,\"unit_price\":1.75,\"description\":\"by Sainsbury's strawberries\"},{\"title\":\"Sainsbury's Blueberries 200g\",\"kcal_per_100g\":45,\"unit_price\":1.75,\"description\":\"by Sainsbury's blueberries\"},{\"title\":\"Sainsbury's Cherry Punnet 200g\",\"kcal_per_100g\":52,\"unit_price\":1.50,\"description\":\"Cherries\"}],\"total\":{\"gross\":5.00,\"vat\":0.83}}";
